@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  frontend:
+    build:
+      context: ./frontend
+    image: <your-acr-name>.azurecr.io/frontend:latest
+    ports:
+      - "8080:80"
+  backend:
+    build:
+      context: ./backend
+    image: akslabacr1122.azurecr.io/backend:latest
+    ports:
+      - "5000:5000"
