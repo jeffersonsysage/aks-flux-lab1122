@@ -1,0 +1,11 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  name: my-repo
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: git@github.com:jeffersonsysage/aks-flux-lab1122.git
+  ref:
+    branch: main
+
