@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Build and Deploy
 
 on:
   push:
@@ -6,13 +6,34 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Echo test
-        run: echo "Pipeline triggered!"
+    - name: Log in to Azure Container Registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: akslabacr122.azurecr.io
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+
+    - name: Build and push Docker images
+      run: |
+        docker-compose build
+        docker-compose push
+
+    - name: Update Kubernetes manifests
+      run: |
+        sed -i "s|image:.*|image: akslabacr122.azurecr.io/frontend:latest|" k8s/frontend-deployment.yaml
+        sed -i "s|image:.*|image: akslabacr122.azurecr.io/backend:latest|" k8s/backend-deployment.yaml
+
+    - name: Commit and push changes
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git commit -am "Update images to latest"
+        git push origin main
 

@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: backend
-        image: akslabacr1122.azurecr.io/backend:latest
+        image: akslabacr122.azurecr.io/backend:latest
         ports:
         - containerPort: 5000
