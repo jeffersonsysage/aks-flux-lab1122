@@ -5,7 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m
-  url: git@github.com:jeffersonsysage/aks-flux-lab1122.git
+  url: https://github.com/jeffersonsysage/aks-flux-lab1122.git
   ref:
     branch: main
 
