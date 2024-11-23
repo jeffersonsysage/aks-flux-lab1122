@@ -51,7 +51,13 @@ jobs:
       run: |
         git diff --exit-code || (git config user.name "GitHub Actions" && git config user.email "actions@github.com" && git commit -am "Update Kubernetes manifests with new images" && git push origin main)
 
-    # Step 8: Sync Kubernetes with Flux
+
+    # Step 8: Install Flux CLI
+    - name: Install Flux CLI
+      run: |
+        curl -s https://fluxcd.io/install.sh | sudo bash
+    
+    # Step 9: Sync Kubernetes with Flux
     - name: Sync Kubernetes with Flux
       run: |
         kubectl flux reconcile source git flux-system
