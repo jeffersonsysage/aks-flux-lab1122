@@ -59,9 +59,11 @@ jobs:
     - name: Check Flux CLI installation
       run: |
         flux --version
-    # Step 9: Sync Kubernetes with Flux
+
+
+
+    # Step 9: Sync Kubernetes with Flux (using Flux CLI instead of kubectl flux)
     - name: Sync Kubernetes with Flux
       run: |
-        kubectl flux reconcile source git flux-system
-        kubectl flux reconcile kustomization flux-system
-
+        flux reconcile source git flux-system
+        flux reconcile kustomization flux-system
