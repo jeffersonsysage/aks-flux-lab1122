@@ -20,20 +20,31 @@ jobs:
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
 
+    - name: Set up Docker Compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
+
     - name: Build and push Docker images
       run: |
-        docker-compose build
-        docker-compose push
+        docker-compose -f docker-compose.yml build
+        docker-compose -f docker-compose.yml push
 
     - name: Update Kubernetes manifests
       run: |
-        sed -i "s|image:.*|image: akslabacr122.azurecr.io/frontend:latest|" k8s/frontend-deployment.yaml
-        sed -i "s|image:.*|image: akslabacr122.azurecr.io/backend:latest|" k8s/backend-deployment.yaml
+        sed -i "s|image:.*frontend:.*|image: akslabacr122.azurecr.io/frontend:latest|" k8s/frontend-deployment.yaml
+        sed -i "s|image:.*backend:.*|image: akslabacr122.azurecr.io/backend:latest|" k8s/backend-deployment.yaml
 
     - name: Commit and push changes
       run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
-        git commit -am "Update images to latest"
+        git commit -am "Update Kubernetes manifests with new images"
         git push origin main
+        # Ensure you handle potential "no changes to commit" gracefully.
+
+    - name: Sync Kubernetes with Flux
+      run: |
+        kubectl flux reconcile source git flux-system
+        kubectl flux reconcile kustomization flux-system
 
