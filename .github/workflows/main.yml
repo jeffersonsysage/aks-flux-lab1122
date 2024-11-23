@@ -43,6 +43,7 @@ jobs:
     # 6. Set up kubeconfig for kubectl to interact with the Kubernetes cluster
     - name: Set up kubeconfig
       run: |
+        mkdir -p $HOME/.kube      
         echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
 
     # 7. Verify kubectl is able to interact with the Kubernetes cluster
