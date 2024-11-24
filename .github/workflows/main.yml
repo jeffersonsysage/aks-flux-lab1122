@@ -46,30 +46,34 @@ jobs:
         mkdir -p $HOME/.kube      
         echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
 
+     # Apply updated manifests to AKS
+     kubectl apply -f k8s/frontend-deployment.yaml
+     kubectl apply -f k8s/backend-deployment.yaml
+
 
     # Step 7: Install Flux CLI
-    - name: Install Flux CLI
-      run: |
-        curl -s https://fluxcd.io/install.sh | sudo bash
+    #- name: Install Flux CLI
+    #  run: |
+    #    curl -s https://fluxcd.io/install.sh | sudo bash
 
     # 7. Verify kubectl is able to interact with the Kubernetes cluster
-    - name: Verify kubectl connection
-      run: |
-        kubectl get nodes
+    #- name: Verify kubectl connection
+    #  run: |
+    #    kubectl get nodes
 
-    - name: Apply GitRepository and Kustomization resources
-      run: |
-        kubectl apply -f k8s/gitrepository.yaml
-        kubectl apply -f k8s/kustomization.yaml
+    #- name: Apply GitRepository and Kustomization resources
+    #  run: |
+    #    kubectl apply -f k8s/gitrepository.yaml
+    #    kubectl apply -f k8s/kustomization.yaml
 
     # 8. Sync Flux with Kubernetes using Flux CLI (Sync Git repository and Kustomizations)
-    - name: Sync Kubernetes with Flux
-      run: |
-        flux reconcile source git flux-system
-        flux reconcile kustomization flux-system
+    #- name: Sync Kubernetes with Flux
+    #  run: |
+    #    flux reconcile source git flux-system
+    #    flux reconcile kustomization flux-system
 
     # 9. Commit and push changes to Git repository (if any changes in manifests)
-    - name: Commit and push changes if any
-      run: |
-        git diff --exit-code || (git config user.name "GitHub Actions" && git config user.email "actions@github.com" && git commit -am "Update Kubernetes manifests with new images" && git push origin main)
+    #- name: Commit and push changes if any
+    #  run: |
+    #    git diff --exit-code || (git config user.name "GitHub Actions" && git config user.email "actions@github.com" && git commit -am "Update Kubernetes manifests with new images" && git push origin main)
 
